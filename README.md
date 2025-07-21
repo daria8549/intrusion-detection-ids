@@ -16,7 +16,7 @@ This project develops an Intrusion Detection System (IDS) using machine learning
 Optional:
 - Test `Random Forest.txt` using Apache Spark if system memory allows
 
-## 📊 Models Used
+##  Models Used
 | Model           | Accuracy | Notes                                      |
 |----------------|----------|---------------------------------------------|
 | Random Forest  | 99.7%    | Best performance but memory-intensive       |
