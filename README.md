@@ -3,16 +3,25 @@
 ## Project Overview
 This project develops an Intrusion Detection System (IDS) using machine learning to classify network traffic as normal or malicious. The system leverages the UNSW-NB15 dataset and AlienVault Open Threat Exchange (OTX) for external threat intelligence.
 
-## Instructions
-In case you need to start the programms:
-1) With IDS you can restart it as you will.
-2) With OTX:
-    2.1 First Start the OTX_Producer, let it run 
-    2.2 Then you start OTX_Consumer,also let it run
-    The mora data it collects, the more accurate will be Naive Bayes. (I got it as hight as 43%)
-    2.3 Then you stop the OTX_Producer (it has error handling for it)
-    2.4 Only then you stop OTX_Consumer (the moment you stop it, it creates new JSON file in the directory)
-    Then it just processes the JSON file, and starts training Naive Bayes.
+##  How to Run
+
+### Step-by-step:
+1. Start the Kafka producer:
+    - Run `OTX_Producer.ipynb` — it fetches live threats from OTX and sends them to Kafka
+2. Start the Kafka consumer:
+    - Run `OTX_Consumer.ipynb` — receives the messages and creates a threat dataset
+3. Run the classifier:
+    - Execute `IDS.ipynb` to train a Naive Bayes model and classify the threats
+
+Optional:
+- Test `Random Forest.txt` using Apache Spark if system memory allows
+
+## 📊 Models Used
+| Model           | Accuracy | Notes                                      |
+|----------------|----------|---------------------------------------------|
+| Random Forest  | 99.7%    | Best performance but memory-intensive       |
+| Decision Tree  | 99.4%    | Prone to overfitting                        |
+| Naive Bayes    | ~63%     | Lightweight but struggled with sparse tags |
 
 Finally, I'd like to say, that I tried to do as much error handling as possible, but in the end of the day, even in class we encountered many errors with the lab code, often due to poorly followed instructions.
 
