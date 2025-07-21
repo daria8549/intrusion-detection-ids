@@ -1,0 +1,56 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, explode, size
+from pyspark.ml.feature import CountVectorizer, HashingTF, IDF, StringIndexer
+from pyspark.ml.classification import RandomForestClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+
+spark = SparkSession.builder \
+    .appName("TestSparkSession") \
+    .config("spark.executor.memory", "4g") \
+    .config("spark.driver.memory", "4g") \
+    .config("spark.driver.extraJavaOptions", "-Xmx4g") \
+    .config("spark.executor.extraJavaOptions", "-Xmx4g") \
+    .getOrCreate()
+
+# Reading JSON file (treating it as a JSON array)
+df = spark.read.json("OTX_Threat_Data.json", multiLine=True)
+
+df.printSchema()
+
+# 1. removing entries with empty Tags
+df = df.filter((df.Tags.isNotNull()) & (size(df.Tags) > 0))
+
+# 2. droping rows with null indicators
+df = df.na.drop(subset=["Indicators"])
+
+# 3. dealing with empty Tags
+df = df.withColumn("Tags", col("Tags").cast("array<string>"))
+
+# 4. handling 'Threat Name' label using StringIndexer
+indexer = StringIndexer(inputCol="Threat Name", outputCol="label")
+df_indexed = indexer.fit(df).transform(df)
+
+# 5.
+# we can use HashingTF + IDF to get a more informative feature vector for the Tags
+hashingTF = HashingTF(inputCol="Tags", outputCol="raw_features")
+idf = IDF(inputCol="raw_features", outputCol="features")
+
+# TF-IDF transformation to Tags
+df_features = hashingTF.transform(df_indexed)
+df_features = idf.fit(df_features).transform(df_features)
+
+train_data, test_data = df_features.randomSplit([0.8, 0.2], seed=42)
+
+rf = RandomForestClassifier(labelCol="label", featuresCol="features", numTrees=10, maxDepth=5)
+rf_model = rf.fit(train_data)
+
+rf_predictions = rf_model.transform(test_data)
+rf_predictions.select("features", "label", "prediction").show()
+
+evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
+rf_accuracy = evaluator.evaluate(rf_predictions)
+print(f"Random Forest Model Accuracy: {rf_accuracy * 100:.2f}%")
+
+f1_evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="f1")
+f1_score = f1_evaluator.evaluate(rf_predictions)
+print(f"Random Forest Model F1 Score: {f1_score:.2f}")

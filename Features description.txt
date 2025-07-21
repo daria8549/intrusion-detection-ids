@@ -1,0 +1,51 @@
+Here is a short description of each feature in the dataset:
+
+- srcip: Source IP address (the originating host of the connection).
+- sport: Source port number (the port number used by the originating host).
+- dstip: Destination IP address (the target host of the connection).
+- dsport: Destination port number (the port number used by the target host).
+- proto: Protocol used in the communication (e.g., TCP, UDP).
+- state: State of the connection (e.g., ESTABLISHED, CLOSED).
+- dur: Duration of the connection.
+- sbytes: Source bytes sent (number of bytes sent from the source).
+- dbytes: Destination bytes received (number of bytes received by the destination).
+- sttl: Source TTL (Time to Live) value in the IP header.
+- dttl: Destination TTL (Time to Live) value in the IP header.
+- sloss: Source packet loss (percentage of lost packets from the source).
+- dloss: Destination packet loss (percentage of lost packets to the destination).
+- service: Service used in the connection (e.g., HTTP, FTP).
+- sload: Source load (rate of source data transmission).
+- dload: Destination load (rate of destination data transmission).
+- spkts: Source packets (number of packets sent from the source).
+- dpkts: Destination packets (number of packets received by the destination).
+- swin: Source window size (size of the TCP window for the source).
+- dwin: Destination window size (size of the TCP window for the destination).
+- stcpb: Source TCP flags (information about the TCP control bits).
+- dtcpb: Destination TCP flags (information about the TCP control bits).
+- smeansz: Source mean packet size.
+- dmeansz: Destination mean packet size.
+- trans_depth: Transaction depth (number of transactions initiated by the source).
+- res_bdy_len: Response body length (size of the response body).
+- sjit: Source jitter (latency variation in source).
+- djit: Destination jitter (latency variation in destination).
+- stime: Source connection start time.
+- ltime: Last packet time.
+- sintpkt: Source inter-packet arrival time.
+- dintpkt: Destination inter-packet arrival time.
+- tcprtt: Round-trip time of TCP packets.
+- synack: Time taken for a SYN-ACK response.
+- ackdat: Time taken for acknowledgment data.
+- is_sm_ips_ports: Indicator if the source and destination IPs and ports are small (binary feature).
+- ct_state_ttl: Count of connections with same state and TTL.
+- ct_flw_http_mthd: Count of HTTP method flows.
+- is_ftp_login: Indicator if the connection is an FTP login.
+- ct_ftp_cmd: Count of FTP commands.
+- ct_srv_src: Count of connections from the same source server.
+- ct_srv_dst: Count of connections to the same destination server.
+- ct_dst_ltm: Count of connections to the destination in the last minute.
+- ct_src_ltm: Count of connections from the source in the last minute.
+- ct_src_dport_ltm: Count of connections from the source to the destination port in the last minute.
+- ct_dst_sport_ltm: Count of connections to the destination source port in the last minute.
+- ct_dst_src_ltm: Count of connections from the destination source to the destination in the last minute.
+- attack_cat: Category of the attack (e.g., DoS, Probe, R2L, U2R).
+- label: Binary label (whether the connection is normal or an attack).
